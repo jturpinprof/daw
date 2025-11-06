@@ -23,11 +23,13 @@ require_once 'datos.php';
         $filterCategory = isset($_GET['cat']) ? $_GET['cat'] : null;
         
         // Display articles
+        $foundAny = false;
         foreach ($articulos as $articulo) {
             // Skip if filtering by category and this article doesn't match
             if ($filterCategory && $articulo['category'] !== $filterCategory) {
                 continue;
             }
+            $foundAny = true;
             ?>
             <div class="article">
                 <span class="category"><?php echo htmlspecialchars($articulo['category']); ?></span>
@@ -39,17 +41,8 @@ require_once 'datos.php';
         }
         
         // Show message if no articles found for the category
-        if ($filterCategory) {
-            $foundAny = false;
-            foreach ($articulos as $articulo) {
-                if ($articulo['category'] === $filterCategory) {
-                    $foundAny = true;
-                    break;
-                }
-            }
-            if (!$foundAny) {
-                echo '<p style="text-align: center; color: #666;">No se encontraron artículos en esta categoría.</p>';
-            }
+        if ($filterCategory && !$foundAny) {
+            echo '<p style="text-align: center; color: #666;">No se encontraron artículos en esta categoría.</p>';
         }
     } else {
         echo '<p style="text-align: center; color: #666;">No hay artículos disponibles.</p>';
